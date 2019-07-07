@@ -54,14 +54,11 @@ export default function(h, options) {
   return options.returnObject ? { style: style, css: css } : style
   function style(nodeName) {
     return function(decls) {
-      return function(attributes, children) {
-        attributes = attributes || {}
-        children = attributes.children || children
-        var nodeDecls = typeof decls == "function" ? decls(attributes) : decls
-        attributes.class = [css(nodeDecls), attributes.class]
-          .filter(Boolean)
-          .join(" ")
-        return h(nodeName, attributes, children)
+      return function(props, context) {
+        // Note that context isn't supported currently.
+        var nodeDecls = typeof decls == "function" ? decls(props) : decls
+        props.class = [css(nodeDecls), props.class].filter(Boolean).join(" ")
+        return h(nodeName, props, props.children || [])
       }
     }
   }
